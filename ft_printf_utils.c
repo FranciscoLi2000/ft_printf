@@ -32,37 +32,27 @@ int print_int(int n)
     return (count);
 }
 
-// Función auxiliar para manejar unsigned long
-static int print_hex_long(unsigned long n)
+static int      print_address(unsigned long address)
 {
-    char    c;
-    int     count;
     char    *hex;
-    
-    if (n == 0)
-    return (write(1, "0", 1));
-    hex = "0123456789abcdef";  // Para punteros usamos minúsculas por convención
+    int             count;
+
+    hex = "0123456789abcdef";
     count = 0;
-    if (n > 15)
-        count += print_hex_long(n / 16);
-    c = hex[n % 16];
-    count += write(1, &c, 1);
+    if (address >= 16)
+        count += print_address(address / 16);
+    count += write(1, &hex[address % 16], 1);
     return (count);
 }
-int print_pointer(void *ptr)
+
+int     print_pointer(void *ptr)
 {
-    int             count;
-    unsigned long   address;
-    
-    // Primero imprimimos el prefijo
-    count = write(1, "0x", 2);
-    // Convertimos el puntero a unsigned long para manejarlo
-    address = (unsigned long)ptr;
-    // Si el puntero es NULL, manejamos este caso especial
-    if (address == 0)
+    int count;
+
+    if (!ptr)
         return (write(1, "(nil)", 5));
-    // Usamos una función auxiliar para imprimir el valor hexadecimal
-    count += print_hex_long(address);
+    count = write(1, "0x", 2);
+    count += print_address((unsigned long)ptr);
     return (count);
 }
 
