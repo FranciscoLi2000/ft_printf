@@ -39,6 +39,8 @@ static int print_hex_long(unsigned long n)
     int     count;
     char    *hex;
     
+    if (n == 0)
+    return (write(1, "0", 1));
     hex = "0123456789abcdef";  // Para punteros usamos minúsculas por convención
     count = 0;
     if (n > 15)
@@ -58,7 +60,7 @@ int print_pointer(void *ptr)
     address = (unsigned long)ptr;
     // Si el puntero es NULL, manejamos este caso especial
     if (address == 0)
-        return (count + write(1, "(nil)", 5));
+        return (write(1, "(nil)", 5));
     // Usamos una función auxiliar para imprimir el valor hexadecimal
     count += print_hex_long(address);
     return (count);
