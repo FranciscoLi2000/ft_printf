@@ -61,7 +61,6 @@ int ft_printf(const char *format, ...)
 {
     va_list ap;
     int     count;
-    int     ret;
 
     if (!format)// Buen chequeo inicial del formato
         return (-1);
