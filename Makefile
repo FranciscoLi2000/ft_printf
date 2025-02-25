@@ -3,31 +3,20 @@ CFLAGS		= -Wall -Wextra -Werror
 AR			= ar rcs
 RM			= rm -f
 
-# Directories
+# Directorios
 SRCS_DIR	= srcs
 LIBFT_DIR	= libft
 BONUS_DIR   = srcs_bonus
 OBJS_DIR	= objs
+LIBFT_OBJ_DIR = libft/objs
 OBJS_BONUS_DIR = objs_bonus
 
-# Source files
+# Archivos fuente de ft_printf
 FT_PRINTF_SRCS	= ft_printf.c print_char.c print_str.c \
 			print_int.c print_uint.c print_hex.c \
 			print_ptr.c
 
-LIBFT_SRCS      = ft_isalpha.c ft_isdigit.c ft_isalnum.c \
-                  ft_isascii.c ft_isprint.c ft_strlen.c \
-                  ft_memset.c ft_bzero.c ft_memcpy.c \
-                  ft_memmove.c ft_strlcpy.c ft_strlcat.c \
-                  ft_toupper.c ft_tolower.c ft_strchr.c \
-                  ft_strrchr.c ft_strncmp.c ft_memchr.c \
-                  ft_memcmp.c ft_strnstr.c ft_atoi.c \
-                  ft_calloc.c ft_strdup.c ft_substr.c \
-                  ft_strjoin.c ft_strtrim.c ft_split.c \
-                  ft_itoa.c ft_strmapi.c ft_striteri.c \
-                  ft_putchar_fd.c ft_putstr_fd.c ft_putendl_fd.c \
-                  ft_putnbr_fd.c
-
+# Archivos fuente de bonus
 BONUS_SRCS  = ft_printf_bonus.c \
                parse_flag_hash.c \
                parse_flag_minus.c \
@@ -43,51 +32,73 @@ BONUS_SRCS  = ft_printf_bonus.c \
                print_str_bonus.c \
                print_uint_bonus.c
 
-# Full paths
-SRCS		= $(addprefix $(SRCS_DIR)/, $(FT_PRINTF_SRCS)) \
-			$(addprefix $(LIBFT_DIR)/, $(LIBFT_SRCS))
-BONUS		= $(addprefix $(BONUS_DIR)/, $(BONUS_SRCS))
+# Archivos fuente de libft
+LIBFT_SRCS_LIST = $(LIBFT_DIR)/ft_isalpha.c $(LIBFT_DIR)/ft_isdigit.c \
+                  $(LIBFT_DIR)/ft_isalnum.c $(LIBFT_DIR)/ft_isascii.c \
+                  $(LIBFT_DIR)/ft_isprint.c $(LIBFT_DIR)/ft_strlen.c \
+                  $(LIBFT_DIR)/ft_memset.c $(LIBFT_DIR)/ft_bzero.c \
+                  $(LIBFT_DIR)/ft_memcpy.c $(LIBFT_DIR)/ft_memmove.c \
+                  $(LIBFT_DIR)/ft_strlcpy.c $(LIBFT_DIR)/ft_strlcat.c \
+                  $(LIBFT_DIR)/ft_toupper.c $(LIBFT_DIR)/ft_tolower.c \
+                  $(LIBFT_DIR)/ft_strchr.c $(LIBFT_DIR)/ft_strrchr.c \
+                  $(LIBFT_DIR)/ft_strncmp.c $(LIBFT_DIR)/ft_memchr.c \
+                  $(LIBFT_DIR)/ft_memcmp.c $(LIBFT_DIR)/ft_strnstr.c \
+                  $(LIBFT_DIR)/ft_atoi.c $(LIBFT_DIR)/ft_calloc.c \
+                  $(LIBFT_DIR)/ft_strdup.c $(LIBFT_DIR)/ft_substr.c \
+                  $(LIBFT_DIR)/ft_strjoin.c $(LIBFT_DIR)/ft_strtrim.c \
+                  $(LIBFT_DIR)/ft_split.c $(LIBFT_DIR)/ft_itoa.c \
+                  $(LIBFT_DIR)/ft_strmapi.c $(LIBFT_DIR)/ft_striteri.c \
+                  $(LIBFT_DIR)/ft_putchar_fd.c $(LIBFT_DIR)/ft_putstr_fd.c \
+                  $(LIBFT_DIR)/ft_putendl_fd.c $(LIBFT_DIR)/ft_putnbr_fd.c
 
-# Objects
+# Paths completos
+SRCS		= $(addprefix $(SRCS_DIR)/, $(FT_PRINTF_SRCS))
+BONUS		= $(addprefix $(BONUS_DIR)/, $(BONUS_SRCS))
+LIBFT_SRCS	= $(LIBFT_SRCS_LIST)
+
+# Archivos objeto
 OBJS		= $(SRCS:$(SRCS_DIR)/%.c=$(OBJS_DIR)/%.o)
 BONUS_OBJS	= $(BONUS:$(BONUS_DIR)/%.c=$(OBJS_BONUS_DIR)/%.o)
+LIBFT_OBJS	= $(LIBFT_SRCS:$(LIBFT_DIR)/%.c=$(LIBFT_OBJ_DIR)/%.o)
 
-# Main library name
+# Nombre de la librería final
 NAME		= libftprintf.a
 
-# Rules
+# Reglas
 all: $(NAME)
 
-# First compile libft, then our ft_printf
-$(NAME): $(OBJS)
-	$(AR) $(NAME) $(OBJS)
-	@echo "Library compiled: \033[1;32m$(NAME)\033[0m"
+$(NAME): $(OBJS) $(LIBFT_OBJS)
+	$(AR) $(NAME) $(OBJS) $(LIBFT_OBJS)
+	@echo "Biblioteca ft_printf compilada: \033[1;32m$(NAME)\033[0m"
 
-# Bonus rule - compile libft, then bonus objects
-bonus: $(BONUS_OBJS)
-	$(AR) $(NAME) $(BONUS_OBJS)
-	@echo "Bonus compiled and added to: \033[1;32m$(NAME)\033[0m"
+bonus: $(BONUS_OBJS) $(LIBFT_OBJS)
+	$(AR) $(NAME) $(BONUS_OBJS) $(LIBFT_OBJS)
+	@echo "Bonus compilado y añadido a: \033[1;32m$(NAME)\033[0m"
 
-# Rule to create object files for mandatory part
 $(OBJS_DIR)/%.o: $(SRCS_DIR)/%.c Makefile ft_printf.h
 	@mkdir -p $(OBJS_DIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
-	@echo "Compiling: \033[0;33m$<\033[0m"
+	@echo "Compilando: \033[0;33m$<\033[0m"
 
-# Rule to create object files for bonus part
-$(OBJS_BONUS_DIR)/%.o: $(BONUS_DIR)/%.c
+$(LIBFT_OBJ_DIR)/%.o: $(LIBFT_DIR)/%.c Makefile libft.h
+	@mkdir -p $(LIBFT_OBJ_DIR)
+	@$(CC) $(CFLAGS) -c $< -o $@
+	@echo "Compilando libft: \033[0;33m$<\033[0m"
+
+$(OBJS_BONUS_DIR)/%.o: $(BONUS_DIR)/%.c Makefile ft_printf.h
 	@mkdir -p $(OBJS_BONUS_DIR)
 	@$(CC) $(CFLAGS) -c $< -o $@
-	@echo "Compiling bonus: \033[0;33m$<\033[0m"
+	@echo "Compilando bonus: \033[0;33m$<\033[0m"
 
 clean:
 	@$(RM) -r $(OBJS_DIR)
 	@$(RM) -r $(OBJS_BONUS_DIR)
-	@echo "Objects removed"
+	@$(RM) -r $(LIBFT_OBJ_DIR)
+	@echo "Archivos objeto eliminados."
 
 fclean: clean
 	@$(RM) $(NAME)
-	@echo "Library removed"
+	@echo "Biblioteca eliminada."
 
 re: fclean all
 
