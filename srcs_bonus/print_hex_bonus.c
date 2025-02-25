@@ -34,37 +34,35 @@ char	*ft_itoa_base(unsigned long long n, int base, int uppercase)
 	str[len] = '\0';
 	if (n == 0)
 		str[0] = '0';
+	len--;
 	while (n > 0)
 	{
-		str[len--] = digits[n % base];
+		str[len] = digits[n % base];
 		n /= base;
+		len--;
 	}
 	return (str);
 }
 
-void print_hex(t_print *tab, int uppercase)
+void print_hex(t_flag *flags, int uppercase)
 {
-    char            *str;
-    unsigned int    num = va_arg(tab->args, unsigned int);
+    unsigned int n = va_arg(flags->args, unsigned int);
+    char *prefix = (flags->hash && n) ? (uppercase ? "0X" : "0x") : "";
+    char *str = ft_itoa_base(n, 16, uppercase);
+    int len = ft_strlen(str) + ft_strlen(prefix);
 
-    // Convertir el número a cadena hexadecimal
-    str = ft_itoa_base(num, 16, uppercase); // Usa tu función ft_itoa_base
-    // Aplicar el flag '#' para prefijo (0x o 0X)
-    if (tab->flags.hash && num != 0)
-    {
-        char *prefix = uppercase ? "0X" : "0x";
-        char *new_str = ft_strjoin(prefix, str);
-        free(str);
-        str = new_str;
-    }
-    // Aplicar precisión (si es necesario)
-    if (tab->flags.precision >= 0)
-        apply_precision(&tab->flags, &str);
-    // Aplicar ancho y alineación (si es necesario)
-    if (tab->flags.width > 0)
-        apply_width(&tab->flags, &str);
-    // Imprimir la cadena final
-    tab->tl += write(1, str, ft_strlen(str));
-    // Liberar memoria
+    int padding = flags->width > len ? flags->width - len : 0;
+
+    if (!flags->minus)
+        while (padding-- > 0)
+            write(1, flags->zero ? "0" : " ", 1);
+
+    write(1, prefix, ft_strlen(prefix));
+    write(1, str, ft_strlen(str));
+
+    if (flags->minus)
+        while (padding-- > 0)
+            write(1, " ", 1);
+
     free(str);
 }

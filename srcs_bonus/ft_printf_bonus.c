@@ -1,64 +1,73 @@
 #include "../ft_printf_bonus.h"
 
-void parse_flags(t_print *tab, const char *format, int *i)
+void init_flags(t_flag *flags)
 {
-    // Reiniciar flags para cada nuevo especificador
-    tab->flags = (t_flags){0};
+    flags->minus = 0;
+    flags->zero = 0;
+    flags->hash = 0;
+    flags->plus = 0;
+    flags->space = 0;
+    flags->width = 0;
+    flags->precision = -1; // -1 indica que no se ha especificado precisión
+}
 
-    while (format[*i])
+void    parse_flags(t_flag *flags, const char *format, int *i, va_list args)
+{
+    while (format[*i] && (ft_strchr("#-+ .0123456789*", format[*i])))
     {
-        if (format[*i] == '-')
-            parse_minus(&tab->flags);
-        else if (format[*i] == '0')
-            parse_zero(&tab->flags);
-        else if (format[*i] == '#')
-            parse_hash(&tab->flags);
+        if (format[*i] == '#')
+            parse_flag_hash(flags);
+        else if (format[*i] == '-')
+            parse_flag_minus(flags);
         else if (format[*i] == '+')
-            parse_plus(&tab->flags);
+            parse_flag_plus(flags);
         else if (format[*i] == ' ')
-            parse_space(&tab->flags);
+            parse_flag_space(flags);
         else if (format[*i] == '.')
-            parse_precision(tab, format, i); // Ejemplo: .5
-        else if (ft_isdigit(format[*i]) || format[*i] == '*')
-            parse_width(tab, format, i);     // Ejemplo: 10 o *
-        else
-            break ;
+            parse_flag_precision(flags, format, i, args);
+        else if (ft_isdigit(format[*i]))
+            parse_flag_width(flags, format, i);
+        else if (format[*i] == '*')
+            parse_width_star(flags, args);
         (*i)++;
     }
 }
 
-void	ft_parse_specifier(t_print *tab, char spec)
+void ft_parse_specifier(t_flag *flags, char spec)
 {
-	if (spec == 'c')
-		print_char(tab);
-	else if (spec == 's')
-		print_str(tab);
-	else if (spec == 'p')
-		print_ptr(tab);
-	else if (spec == 'd' || spec == 'i')
-		print_int(tab);
-	else if (spec == 'u')
-		print_uint(tab);
-	else if (spec == 'x')
-		print_hex(tab, 0);
-	else if (spec == 'X')
-		print_hex(tab, 1);
-	else if (spec == '%')
-		tab->tl += write(1, "%", 1);
-	else
-	{
-		tab->tl += write(1, "%", 1);
-		tab->tl += write(1, &spec, 1);
-	}
+    if (spec == 'c')
+        print_char(flags);
+    else if (spec == 's')
+        print_str(flags);
+    else if (spec == 'p')
+        print_ptr(flags);
+    else if (spec == 'd' || spec == 'i')
+        print_int(flags);
+    else if (spec == 'u')
+        print_uint(flags);
+    else if (spec == 'x')
+        print_hex(flags, 0);
+    else if (spec == 'X')
+        print_hex(flags, 1);
+    else if (spec == '%')
+        flags->tl += write(1, "%", 1);
+    else
+    {
+        flags->tl += write(1, "%", 1);
+        flags->tl += write(1, &spec, 1);
+    }
 }
 
 int ft_printf(const char *format, ...)
 {
-    t_print tab;
+    t_flag flags;
     int     i;
 
-    va_start(tab.args, format);
-    tab.tl = 0;
+    if (!format)
+        return (-1);
+
+    va_start(flags.args, format);
+    flags.tl = 0;
     i = 0;
     while (format[i])
     {
@@ -66,14 +75,17 @@ int ft_printf(const char *format, ...)
         {
             i++;
             if (!format[i])
-                break ;
-            parse_flags(&tab, format, &i);  // Analizar flags aquí
-            ft_parse_specifier(&tab, format[i]); // Luego procesar el especificador
+                break;
+            init_flags(&flags); // ¡Importante! Reiniciar los flags para cada conversión
+            parse_flags(&flags, format, &i, flags.args); // Pasar flags.args como 4º parámetro
+            if (format[i]) // Verificar que no hemos llegado al final
+                ft_parse_specifier(&flags, format[i]);
         }
         else
-            tab.tl += write(1, &format[i], 1);
+            flags.tl += write(1, &format[i], 1);
         i++;
     }
-    va_end(tab.args);
-    return (tab.tl);
+
+    va_end(flags.args);
+    return (flags.tl);
 }

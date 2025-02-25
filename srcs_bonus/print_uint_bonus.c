@@ -41,63 +41,23 @@ char	*ft_utoa(unsigned int n)
 	return (str);
 }
 
-void apply_precision(t_flags *flags, char **str)
+void print_uint(t_flag *flags)
 {
-    int len = ft_strlen(*str);
-    int precision = flags->precision;
+    unsigned int n = va_arg(flags->args, unsigned int);
+    char *str = ft_utoa(n);
+    int len = ft_strlen(str);
 
-    if (precision > len)
-    {
-        char *new_str = malloc(precision + 1);
-        if (!new_str)
-            return ;
-        ft_memset(new_str, '0', precision - len);
-        ft_strlcpy(new_str + (precision - len), *str, len + 1);
-        free(*str);
-        *str = new_str;
-    }
-}
+    int padding = flags->width > len ? flags->width - len : 0;
 
-void apply_width(t_flags *flags, char **str)
-{
-    int len = ft_strlen(*str);
-    int width = flags->width;
+    if (!flags->minus)
+        while (padding-- > 0)
+            write(1, flags->zero ? "0" : " ", 1);
 
-    if (width > len)
-    {
-        char *new_str = malloc(width + 1);
-        if (!new_str)
-            return ;
-        if (flags->minus)
-        {
-            ft_strlcpy(new_str, *str, len + 1);
-            ft_memset(new_str + len, ' ', width - len);
-        }
-        else
-        {
-            ft_memset(new_str, (flags->zero && !flags->minus) ? '0' : ' ', width - len);
-            ft_strlcpy(new_str + (width - len), *str, len + 1);
-        }
-        free(*str);
-        *str = new_str;
-    }
-}
+    write(1, str, len);
 
-void print_uint(t_print *tab)
-{
-    char            *str;
-    unsigned int    num = va_arg(tab->args, unsigned int);
+    if (flags->minus)
+        while (padding-- > 0)
+            write(1, " ", 1);
 
-    // Convertir el número a cadena
-    str = ft_utoa(num); // Usa tu función ft_utoa para unsigned int
-    // Aplicar precisión (si es necesario)
-    if (tab->flags.precision >= 0)
-        apply_precision(&tab->flags, &str);
-    // Aplicar ancho y alineación (si es necesario)
-    if (tab->flags.width > 0)
-        apply_width(&tab->flags, &str);
-    // Imprimir la cadena final
-    tab->tl += write(1, str, ft_strlen(str));
-    // Liberar memoria
     free(str);
 }

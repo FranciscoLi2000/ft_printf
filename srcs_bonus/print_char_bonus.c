@@ -1,27 +1,19 @@
 #include "../ft_printf_bonus.h"
 
-void    print_char(t_print *tab)
+void print_char(t_flag *flags)
 {
-    char c = va_arg(tab->args, int); // Obtener el carácter
-    int width = tab->flags.width;    // Ancho de campo
-    int len = 1;                    // Longitud del carácter (siempre 1)
-    char pad_char = ' ';            // Carácter de relleno (espacio por defecto)
+    char c = va_arg(flags->args, int);
+    int padding = flags->width > 1 ? flags->width - 1 : 0;
 
-    // Si se especifica '0' y no hay '-', rellenar con ceros
-    if (tab->flags.zero && !tab->flags.minus)
-        pad_char = '0';
-    // Imprimir relleno a la izquierda (si no hay '-')
-    if (!tab->flags.minus && width > len)
-    {
-        while (width-- > len)
-            tab->tl += write(1, &pad_char, 1);
-    }
-    // Imprimir el carácter
-    tab->tl += write(1, &c, 1);
-    // Imprimir relleno a la derecha (si hay '-')
-    if (tab->flags.minus && width > len)
-    {
-        while (width-- > len)
-            tab->tl += write(1, &pad_char, 1);
-    }
+    if (!flags->minus)
+        while (padding-- > 0)
+            write(1, " ", 1);
+    
+    write(1, &c, 1);
+
+    if (flags->minus)
+        while (padding-- > 0)
+            write(1, " ", 1);
+
+    flags->tl++;  // Aumentar la cantidad de caracteres escritos
 }

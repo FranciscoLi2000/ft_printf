@@ -1,20 +1,22 @@
 #include "../ft_printf_bonus.h"
 
-void	print_int(t_print *tab)
+void print_int(t_flag *flags)
 {
-	char	*str;
-	int		num;
+    int n = va_arg(flags->args, int);
+    char *str = ft_itoa(n);
+    int len = ft_strlen(str);
+    
+    int padding = flags->width > len ? flags->width - len : 0;
 
-	num = va_arg(tab->args, int);
-    // Aplicar flags: +, espacio, precisión, etc.
-    if (tab->flags.plus && num >= 0)
-        str = ft_strjoin("+", ft_itoa(num));
-    else if (tab->flags.space && num >= 0)
-        str = ft_strjoin(" ", ft_itoa(num));
-    else
-	    str = ft_itoa(num);
-	// Aplicar ancho y alineación (ej: %-10d)
-    apply_width(&tab->flags, &str);
-	tab->tl += write(1, str, ft_strlen(str));
-	free(str);
+    if (!flags->minus)
+        while (padding-- > 0)
+            write(1, flags->zero ? "0" : " ", 1);
+
+    write(1, str, len);
+
+    if (flags->minus)
+        while (padding-- > 0)
+            write(1, " ", 1);
+
+    free(str);
 }
