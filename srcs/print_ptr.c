@@ -39,7 +39,6 @@ void	print_ptr(t_print *tab)
 		return ;
 	}
 	str = ft_ptoa(ptr);
-	tab->tl += write(1, "0x", 2);
 	tab->tl += write(1, str, ft_strlen(str));
 	free(str);
 }

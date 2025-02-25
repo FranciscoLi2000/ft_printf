@@ -6,8 +6,12 @@
 # include <stdlib.h>
 # include "libft/libft.h"
 
-typedef struct s_flags
-{
+// Única estructura para manejar todo en el bonus
+typedef struct s_flag {
+    va_list args;   // Lista de argumentos
+    int     tl;     // Total de caracteres escritos
+
+    // Flags
     int     minus;
     int     zero;
     int     hash;
@@ -15,38 +19,31 @@ typedef struct s_flags
     int     space;
     int     width;
     int     precision;
-    // ... otros flags si es necesario
-}   t_flags;
+} t_flag;
 
-typedef struct s_print
-{
-    va_list args;
-    int     tl;     // Total de caracteres impresos
-    char    spec;   // Especificador actual (c, s, d, etc.)
-    t_flags flags;  // Flags y parámetros
-} t_print;
-
-char	*ft_utoa(unsigned int n);
+void    init_flags(t_flag *flags);
+// Prototipos de funciones
+void    parse_flags(t_flag *flags, const char *format, int *i, va_list args);
+void    ft_parse_specifier(t_flag *flags, char spec);
+int     ft_printf(const char *format, ...);
 char	*ft_itoa_base(unsigned long long n, int base, int uppercase);
-char	*ft_ptoa(void *ptr);
-void	ft_parse_specifier(t_print *tab, char spec);
-void    parse_flags(t_print *tab, const char *format, int *i);
-void    apply_width(t_flags *flags, char **str);
-void    apply_precision(t_flags *flags, char **str);
-void    parse_zero(t_flags *flags);
-void    parse_width(t_flags *flags, const char *format, int *i);
-void    parse_width_star(t_flags *flags, va_list args);
-void    parse_space(t_flags *flags);
-void    parse_precision(t_flags *flags, const char *format, int *i, va_list args);
-void    parse_plus(t_flags *flags);
-void    parse_minus(t_flags *flags);
-void    parse_hash(t_flags *flags);
-void	print_char(t_print *tab);
-void	print_str(t_print *tab);
-void	print_int(t_print *tab);
-void	print_uint(t_print *tab);
-void	print_hex(t_print *tab, int uppercase);
-void	print_ptr(t_print *tab);
-int		ft_printf(const char *format, ...);
+
+// Funciones de impresión
+void	print_char(t_flag *flags);
+void	print_str(t_flag *flags);
+void	print_int(t_flag *flags);
+void	print_uint(t_flag *flags);
+void	print_hex(t_flag *flags, int uppercase);
+void	print_ptr(t_flag *flags);
+
+void parse_flag_hash(t_flag *flags);
+void parse_flag_minus(t_flag *flags);
+void parse_flag_plus(t_flag *flags);
+void parse_flag_precision(t_flag *flags, const char *format, int *i, va_list args);
+void parse_flag_space(t_flag *flags);
+void parse_flag_width(t_flag *flags, const char *format, int *i);
+void parse_width_star(t_flag *flags, va_list args);
+void parse_flag_zero(t_flag *flags);
 
 #endif
+

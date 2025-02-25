@@ -46,10 +46,12 @@ char	*ft_itoa_base(unsigned long long n, int base, int uppercase)
 	str[len] = '\0';
 	if (n == 0)
 		str[0] = '0';
+	len--;
 	while (n > 0)
 	{
-		str[len--] = digits[n % base];
+		str[len] = digits[n % base];
 		n /= base;
+		len--;
 	}
 	return (str);
 }
