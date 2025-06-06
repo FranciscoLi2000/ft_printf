@@ -1,23 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_str.c                                        :+:      :+:    :+:   */
+/*   ft_putnbr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yufli <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: yufli <yufli@student.42barcelona.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/24 17:25:00 by yufli             #+#    #+#             */
-/*   Updated: 2025/02/24 22:46:25 by yufli            ###   ########.fr       */
+/*   Created: 2025/06/04 01:37:16 by yufli             #+#    #+#             */
+/*   Updated: 2025/06/06 18:14:02 by yufli            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../ft_printf.h"
+#include "libft.h"
 
-void	print_str(t_print *tab)
+void	ft_putnbr(int nb)
 {
-	char	*str;
-
-	str = va_arg(tab->args, char *);
-	if (!str)
-		str = "(null)";
-	tab->tl += write(1, str, ft_strlen(str));
+	if (nb == -2147483648)
+	{
+		write(1, "-2147483648", 11);
+		return ;
+	}
+	if (nb < 0)
+	{
+		write(1, "-", 1);
+		nb = -nb;
+	}
+	if (nb >= 10)
+		ft_putnbr(nb / 10);
+	ft_putchar(nb % 10 + '0');
 }

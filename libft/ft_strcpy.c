@@ -1,26 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   print_int.c                                        :+:      :+:    :+:   */
+/*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yufli <marvin@42.fr>                       +#+  +:+       +#+        */
+/*   By: yufli <yufli@student.42barcelona.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/24 17:26:27 by yufli             #+#    #+#             */
-/*   Updated: 2025/02/24 22:46:38 by yufli            ###   ########.fr       */
+/*   Created: 2025/06/04 00:36:53 by yufli             #+#    #+#             */
+/*   Updated: 2025/06/04 00:36:56 by yufli            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../ft_printf.h"
+#include "libft.h"
 
-void	print_int(t_print *tab)
+char	*ft_strcpy(char *dest, char *src)
 {
-	char	*str;
-	int		num;
+	int	i;
 
-	num = va_arg(tab->args, int);
-	str = ft_itoa(num);
-	if (!str)
-		return ;
-	tab->tl += write(1, str, ft_strlen(str));
-	free(str);
+	i = 0;
+	while (src[i] != '\0')
+	{
+		dest[i] = src[i];
+		i++;
+	}
+	dest[i] = '\0';
+	return (dest);
 }
