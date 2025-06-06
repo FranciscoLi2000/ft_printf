@@ -6,7 +6,7 @@
 /*   By: yufli <yufli@student.42barcelona.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 20:15:42 by yufli             #+#    #+#             */
-/*   Updated: 2025/06/06 20:23:39 by yufli            ###   ########.fr       */
+/*   Updated: 2025/06/06 22:37:08 by yufli            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ int	ft_put_hex(unsigned int n, int upper)
 	char	*base;
 
 	if (upper)
-        base = "0123456789ABCDEF";
-    else
-        base = "0123456789abcdef";
+		base = "0123456789ABCDEF";
+	else
+		base = "0123456789abcdef";
 	if (n >= 16)
 		return (ft_put_hex(n / 16, upper) + ft_putchar(base[n % 16]));
 	else

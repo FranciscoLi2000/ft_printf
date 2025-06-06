@@ -6,7 +6,7 @@
 /*   By: yufli <yufli@student.42barcelona.com>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 09:13:34 by yufli             #+#    #+#             */
-/*   Updated: 2025/06/06 18:19:43 by yufli            ###   ########.fr       */
+/*   Updated: 2025/06/06 22:36:05 by yufli            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,6 @@ int				ft_atoi_base(const char *str, int str_base);
 int				ft_is_prime(int nbr);
 int				ft_isspace(int c);
 char			*ft_itoa(int n);
-void			ft_putchar(char c);
-void			ft_putnbr(int nb);
-void			ft_putstr(char *str);
 int				*ft_range(int start, int end);
 int				*ft_rrange(int start, int end);
 char			**ft_split(char const *s, char c);
