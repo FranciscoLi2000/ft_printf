@@ -45,9 +45,7 @@ int	ft_printf(const char *format, ...)
 	while (format[i])
 	{
 		if (format[i] == '%' && format[i + 1])
-		{
 			count += ft_handle_format(format[++i], args);
-		}
 		else
 			count += ft_putchar(format[i]);
 		i++;
