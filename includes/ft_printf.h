@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_printf.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yufli <yufli@student.42barcelona.com>      +#+  +:+       +#+        */
+/*   By: yufli <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/06 20:25:25 by yufli             #+#    #+#             */
-/*   Updated: 2025/06/06 22:34:46 by yufli            ###   ########.fr       */
+/*   Created: 2025/02/24 14:02:49 by yufli             #+#    #+#             */
+/*   Updated: 2025/02/24 22:49:14 by yufli            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,25 @@
 # include <stdarg.h>
 # include <unistd.h>
 # include <stdlib.h>
-# include <stddef.h>
+# include "libft/libft.h"
 
-int		ft_strlen(char *str);
+typedef struct s_print
+{
+	va_list	args;
+	int		tl;
+	char	spec;
+}	t_print;
+
+char	*ft_utoa(unsigned int n);
+char	*ft_itoa_base(unsigned long long n, int base, int uppercase);
+char	*ft_ptoa(void *ptr);
+void	ft_parse_specifier(t_print *tab, char spec);
+void	print_char(t_print *tab);
+void	print_str(t_print *tab);
+void	print_int(t_print *tab);
+void	print_uint(t_print *tab);
+void	print_hex(t_print *tab, int uppercase);
+void	print_ptr(t_print *tab);
 int		ft_printf(const char *format, ...);
-int		ft_handle_format(char type, va_list args);
-int		ft_putchar(char c);
-int		ft_putstr(char *s);
-int		ft_putnbr(int n);
-int		ft_put_unsigned(unsigned int n);
-int		ft_put_hex(unsigned int n, int upper);
-int		ft_putptr(unsigned long ptr);
-int		ft_putptr_hex(unsigned long n);
-char	*ft_itoa(int n);
 
 #endif
